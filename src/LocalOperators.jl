@@ -16,7 +16,7 @@ struct LocalOperator{T<:Number} <: AbstractMatrix{T}
     data::Matrix{T}
     support::UnitRange{Int}
     localdim::Int
-    function LocalOp(data::AbstractMatrix{T}, support::UnitRange, localdim::Int) where {T}
+    function LocalOperator(data::AbstractMatrix{T}, support::UnitRange, localdim::Int) where {T}
         D = localdim
         n, m = size(data)
         if !(n == m)
