@@ -2,6 +2,7 @@ push!(LOAD_PATH,"../src/")
 
 using Documenter
 using LocalOperators
+import LocalOperators: LocalOperator
 
 makedocs(sitename="LocalOperators.jl")
 
