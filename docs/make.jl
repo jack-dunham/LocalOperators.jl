@@ -10,7 +10,7 @@ makedocs(
     pages = [
         "Home" => "index.md",
         "Library" => "library.md",
-        "Index" => ["index/index.md"]
+        "Index" => "_index.md"
     ]
 )
 
