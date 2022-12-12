@@ -16,7 +16,3 @@ locality
 localdim
 dim
 ```
-
-## Methods defining operations on `LocalOperator` types
-
-TODO
