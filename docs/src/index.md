@@ -19,25 +19,23 @@ LocalOperator
 A `LocalOperator` can be constructed like so:
 
 ```jldoctest ztimesz
-julia> d = 2;                               # Local dimension 
-
 julia> Z = Matrix{ComplexF64}([1 0; 0 -1]); # Pauli Z matrix
 
 julia> r = 0:0;                             # Support on site 0 only
 
-julia> a = LocalOperator(Z, r, d)
+julia> a = LocalOperator(Z, r)
 2×2 1-local LocalOperator{ComplexF64} on sites 0 to 0:
  1.0+0.0im   0.0+0.0im
  0.0+0.0im  -1.0+0.0im
 ```
-If the last argument to `LocalOperator` is ommited, then local dimension `d=2` is assumed.
+We can also supply an integer instead of a range to easily construct a $1$-local operator,
 ```jldoctest ztimesz
-julia> b = LocalOperator(Z, 1:1)
+julia> b = LocalOperator(Z, 1)
 2×2 1-local LocalOperator{ComplexF64} on sites 1 to 1:
  1.0+0.0im   0.0+0.0im
  0.0+0.0im  -1.0+0.0im
 ```
-We can now multiply `a` and `b` together to perform $(a \otimes 1) * (1 \otimes b)$:
+or omit this entirely to use the default index $0$. We can now multiply `a` and `b` together to perform $(a \otimes 1) * (1 \otimes b)$:
 ```jldoctest ztimesz
 julia> a * b 
 4×4 2-local LocalOperator{ComplexF64} on sites 0 to 1:
