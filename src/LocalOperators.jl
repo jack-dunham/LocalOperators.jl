@@ -126,12 +126,12 @@ Base.setindex!(A::LocalOp, v, i::Int) = setindex!(A.data, v, i)
 
 Base.IndexStyle(::Type{<:LocalOp}) = IndexStyle(Matrix{ComplexF64})
 
-Base.similar(A::LocalOp) = LocalOp(similar(A.data), support(A), localdim(A))
+Base.similar(A::LocalOp) = LocalOp(similar(A.data), support(A))
 function Base.similar(A::LocalOp, ::Type{<:Number}, dims::Dims)
     D = localdim(A)
     size_change = Int(log(D, dims[1]) - log(D, size(A)[1]))
     r = support(A) .+ size_change
-    return LocalOp(similar(A.data, ComplexF64, dims), r, D)
+    return LocalOp(similar(A.data, ComplexF64, dims), r)
 end
 
 # Fallback 
@@ -205,7 +205,7 @@ function LinearAlgebra.axpy!(x::Number, a::LocalOp, b::LocalOp)
 end
 function LinearAlgebra.axpby!(x::Number, a::LocalOp, y::Number, b::LocalOp)
     localdim(a) == localdim(b) || throw(LocalDimensionMismatch(a, b))
-    axpy!(x, a.data, y, b.data)
+    axpby!(x, a.data, y, b.data)
     return b
 end
 
