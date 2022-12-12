@@ -8,8 +8,8 @@ using TestSetExtensions
     S = [1 0 0 ; 0 0 0; 0 0 -1]
     A = [1 0 0 1; 0 1 0 0; 0 0 1 0; 1 0 0 1]
     @testset "Constructors" begin
-        @test_throws "not square" LocalOperator(M_r, 0:0) 
-        @test_throws "local dimension" LocalOperator(S, 0:1) 
+        @test_throws ArgumentError LocalOperator(M_r, 0:0) 
+        @test_throws ArgumentError LocalOperator(S, 0:1) 
         @test LocalOperator(Z, -1) == LocalOperator(Z, -1:-1)
         @test LocalOperator(Z) == LocalOperator(Z, 0:0)
     end
