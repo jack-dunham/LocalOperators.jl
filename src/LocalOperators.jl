@@ -3,32 +3,41 @@ module LocalOperators
 using LinearAlgebra
 
 export LocalOperator
+export support, minsupport, maxsupport, locality, localdim, dim
 
-"""
+@doc raw"""
     LocalOperator{T<:Number} <: AbstractMatrix{T}
+
+Concrete type corresponding to a matrix operator acting on a tensor product of local vector 
+spaces. The operator acts as the matrix stored in the field `data` on the local
+vector spaces defined by the field `support`, and as the identity elsewhere. 
 
 # Fields
 - `data::Matrix{T}`: stores the matrix represention of the operator
 - `support::UnitRange{Int}`: stores the sites that the operator has support on
-- `localdim::Int`: stores the local dimension of the vector space
 """
 struct LocalOperator{T<:Number} <: AbstractMatrix{T}
     data::Matrix{T}
     support::UnitRange{Int}
-    localdim::Int
-    function LocalOperator(data::AbstractMatrix{T}, support::UnitRange, localdim::Int) where {T}
+    function LocalOperator(
+        data::AbstractMatrix{T}, support::UnitRange
+    ) where {T}
         D = localdim
         n, m = size(data)
         if !(n == m)
             throw(ArgumentError("matrix size $(size(data)) is not square"))
-        elseif !(isinteger(log(D, n)))
-            throw(
-                ArgumentError(
-                    "matrix size $(size(data)) is not compatible with local dimension D=$D"
-                ),
-            )
-        else
-            return new{T}(data, support, localdim)
+        else 
+            l = length(support)
+            D = n^(1/l)
+            if !(isinteger(D))
+                throw(
+                    ArgumentError(
+                    "matrix size $(size(data)) and support $(support) results in non-integer local dimension $D"
+                    ),
+                )
+            else
+                return new{T}(data, support)
+            end
         end
     end
 end
@@ -46,16 +55,59 @@ function Base.showerror(io::IO, e::LocalDimensionMismatch)
         "LocalDimensionMismatch: local dimensions must match: a has local dim $(localdim(e.a)), b has local dim $(localdim(e.b))",
     )
 end
-# Default has local dimension 2
-LocalOp(a::AbstractMatrix, r::UnitRange) = LocalOp(a, r, 2)
+
+@doc raw"""
+    LocalOperator(A::AbstractMatrix, support::UnitRange{Int})
+    LocalOperator(A::AbstractMatrix, i::Int=0)
+
+Contructs a `LocalOperator` corresponding to the matrix `A` with support on the indices 
+defined by the range `support`, or the single index `i` defaulting to `0`.
+"""
+LocalOperator(a::AbstractMatrix, i::Int=0) = LocalOperator(a, i:i)
 
 Base.size(A::LocalOp) = size(A.data)
 
+@doc raw"""
+    support(A::LocalOperator)
+Returns the support of `A` as a `UnitRange` type. That is, returns the range of indices that
+the local operator `A` is defined on. Equivalent to `A.support` or `getfield(A, :support)`.
+See also [`maxsupport`](@ref) and [`minsupport`](@ref).
+"""
 support(A::LocalOp) = A.support
+
+@doc raw"""
+    minsupport(A::LocalOperator)
+Returns the lowest site index that `A` has support on. See also [`support`](@ref) and
+[`maxsupport`](@ref).
+"""
 minsupport(A::LocalOp) = support(A)[begin]
+
+@doc raw"""
+    maxsupport(A::LocalOperator)
+Returns the highest site index that `A` has support on. See also [`support`](@ref) and [`minsupport`](@ref)
+"""
 maxsupport(A::LocalOp) = support(A)[end]
 
-localdim(A::LocalOp) = A.localdim
+@doc raw"""
+    locality(A::LocalOperator)
+Returns the locality of `A`. That is, returns the number of sites that `A` has support on.
+"""
+locality(A::LocalOp) = length(support(A))
+
+@doc raw"""
+    localdim(A::LocalOperator)
+
+Returns the dimension of the *local* vector spaces that form the tensor product space that
+`A` has support on.
+"""
+localdim(A::LocalOp) = Int( (size(A)[1])^(1 / locality(A)))
+
+@doc raw"""
+    dim(A::LocalOperator)
+
+Returns the dimension of the tensor product space corresponding to the support of `A`. 
+"""
+dim(A::LocalOp) = localdim(A)^locality(A)
 
 function Base.showarg(io::IO, A::LocalOp, toplevel)
     return print(
