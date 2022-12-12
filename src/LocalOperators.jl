@@ -150,7 +150,9 @@ end
 
 # Pad `a` on the left and right with `kl` and `kr` 2x2 identity matrices respectively.
 function pad(a::LocalOp, kl::Int, kr::Int)
-    return kron(1, fill(one(a), kl)..., a, fill(one(a), kr)...)
+    d = localdim(a)
+    idd = Matrix{eltype(a)}(I,d,d)
+    return kron(1, fill(idd, kl)..., a, fill(idd, kr)...)
 end
 
 function fit(a::LocalOp, r::UnitRange{Int})
