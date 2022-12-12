@@ -30,12 +30,12 @@ julia> a = LocalOperator(Z, r)
 ```
 We can also supply an integer instead of a range to easily construct a $1$-local operator,
 ```jldoctest ztimesz
-julia> b = LocalOperator(Z, 1)
-2×2 1-local LocalOperator{ComplexF64} on sites 1 to 1:
+julia> b = LocalOperator(Z, 2)
+2×2 1-local LocalOperator{ComplexF64} on sites 2 to 2:
  1.0+0.0im   0.0+0.0im
  0.0+0.0im  -1.0+0.0im
 ```
-or omit this entirely to use the default index $0$. We can now multiply `a` and `b` together to perform $(a \otimes 1) * (1 \otimes b)$:
+or omit this entirely to use the default index $0$. We can now multiply `a` and `b` together to perform $(a \otimes \mathbb{I}) \cdot (\mathbb{I} \otimes b)$:
 ```jldoctest ztimesz
 julia> a * b 
 4×4 2-local LocalOperator{ComplexF64} on sites 0 to 1:
