@@ -6,7 +6,7 @@
 [ci-img]: https://github.com/jack-dunham/LocalOperators.jl/workflows/CI/badge.svg
 [ci-url]: https://github.com/jack-dunham/LocalOperators.jl/actions?query=workflow%3ACI
 
-[ci-nightly-img]: https://github.com/jack-dunham/LocalOperators.jl/workflows/CI%20Julia%20nightly%20/badge.svg
+[ci-nightly-img]: https://github.com/jack-dunham/LocalOperators.jl/workflows/CI%20Julia%20nightly/badge.svg
 [ci-nightly-url]: https://github.com/jack-dunham/LocalOperators.jl/actions?query=workflow%3A%22CI+Julia+nightly%22
 
 [codecov-img]: https://codecov.io/gh/jack-dunham/LocalOperators.jl/branch/main/graph/badge.svg
