@@ -19,20 +19,18 @@ vector spaces defined by the field `support`, and as the identity elsewhere.
 struct LocalOperator{T<:Number} <: AbstractMatrix{T}
     data::Matrix{T}
     support::UnitRange{Int}
-    function LocalOperator(
-        data::AbstractMatrix{T}, support::UnitRange
-    ) where {T}
+    function LocalOperator(data::AbstractMatrix{T}, support::UnitRange) where {T}
         D = localdim
         n, m = size(data)
         if !(n == m)
             throw(ArgumentError("matrix size $(size(data)) is not square"))
-        else 
+        else
             l = length(support)
-            D = n^(1/l)
+            D = n^(1 / l)
             if !(isinteger(D))
                 throw(
                     ArgumentError(
-                    "matrix size $(size(data)) and support $(support) results in non-integer local dimension $D"
+                        "matrix size $(size(data)) and support $(support) results in non-integer local dimension $D",
                     ),
                 )
             else
@@ -100,7 +98,7 @@ locality(A::LocalOp) = length(support(A))
 Returns the dimension of the *local* vector spaces that form the tensor product space that
 `A` has support on.
 """
-localdim(A::LocalOp) = Int( (size(A)[1])^(1 / locality(A)))
+localdim(A::LocalOp) = Int((size(A)[1])^(1 / locality(A)))
 
 @doc raw"""
     dim(A::LocalOperator)
@@ -137,13 +135,13 @@ end
 # Fallback 
 Base.similar(A::LocalOp, dims::Tuple{Base.OneTo{Int64}}) = similar(A.data, dims)
 
+promote_support(a::LocalOp) = support(a)
 function promote_support(a::LocalOp, b::LocalOp)
     localdim(a) == localdim(b) || throw(LocalDimensionMismatch(a, b))
     l = min(minsupport(a), minsupport(b))
     u = max(maxsupport(a), maxsupport(b))
     return l:u
 end
-
 function promote_support(a::LocalOp, b::LocalOp, c::LocalOp, args::Vararg{<:LocalOp})
     return promote_support(promote_support(a, b), c, args...)
 end
@@ -151,7 +149,7 @@ end
 # Pad `a` on the left and right with `kl` and `kr` 2x2 identity matrices respectively.
 function pad(a::LocalOp, kl::Int, kr::Int)
     d = localdim(a)
-    idd = Matrix{eltype(a)}(I,d,d)
+    idd = Matrix{eltype(a)}(I, d, d)
     return kron(1, fill(idd, kl)..., a, fill(idd, kr)...)
 end
 
