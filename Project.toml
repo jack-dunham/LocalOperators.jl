@@ -1,7 +1,7 @@
 name = "LocalOperators"
 uuid = "add91e70-8f50-42ff-91ca-93a465b4ced2"
 authors = ["Jack Dunham <ucapunh@ucl.ac.uk>"]
-version = "1.0.0"
+version = "1.0.1"
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
